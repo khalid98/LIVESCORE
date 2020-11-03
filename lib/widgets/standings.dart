@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:http/http.dart';
-import 'dart:async';
-import 'dart:convert';
+import 'package:livescroe/Services/api.dart';
 
-final String token = 'c2928278d71247c3bcb7c4ccc89cc2c6';
 
 class leagueStanding extends StatefulWidget{
   String leagueCode;
@@ -30,7 +27,7 @@ class leagueStandingState extends State<leagueStanding> {
       //backgroundColor: leagueColor,
       //appBar: AppBar(title: Text(leagueName), backgroundColor: leagueColor,),
       child: FutureBuilder(
-        future: getLeagueStandings(leagueCode),
+        future: SoccerApi().getLeagueStandings(leagueCode),
         builder: (context, snapshot){
           if(snapshot.hasData == false){
             return Center(child: CircularProgressIndicator());
@@ -98,36 +95,8 @@ Widget rankingRow([String p = 'Pos' ,String t = 'Team', String pts = 'Pts', Stri
 
 final plStyle = TextStyle(
     color: Colors.white,
-    fontSize: 20,
-    fontWeight: FontWeight.w600
+    fontSize: 14,
 );
 
-class teamStanding{
-  int pos;
-  Map<String, dynamic> teamInfo;
-  int playedGames;
-  int w;
-  int d;
-  int l;
-  int pts;
 
-  teamStanding(this.pos, this.teamInfo, this.playedGames, this.w, this.d, this.l, this.pts);
 
-}
-
-Future<List<teamStanding>> getLeagueStandings(String leagueCode) async{
-  Response r = await get(Uri.encodeFull('https://api.football-data.org/v2/competitions/$leagueCode/standings?standingType=TOTAL'),
-      headers: {
-        "X-Auth-Token" : token
-      }
-  );
-  Map<String, dynamic> x = jsonDecode(r.body);
-  List y = x['standings'];
-
-  List<teamStanding> k = [];
-  for(var i in y[0]['table']){
-    k.add(new teamStanding(i['position'], i['team'], i['playedGames'], i['won'], i['draw'], i['lost'], i['points']));
-  }
-
-  return k;
-}

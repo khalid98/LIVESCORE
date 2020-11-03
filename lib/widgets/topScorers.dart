@@ -1,35 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:http/http.dart';
-import 'dart:async';
-import 'dart:convert';
-
-final String token = 'c2928278d71247c3bcb7c4ccc89cc2c6';
-
-//Top scorers in league object and handling
-
-class topScorer{
-  String name;
-  String teamName;
-  String goalNum;
-  topScorer(this.name, this.teamName, this.goalNum);
-}
-
-Future<List<topScorer>> getScorers(String code) async{
-  Response r = await get(Uri.encodeFull('https://api.football-data.org/v2/competitions/$code/scorers'),
-    headers: {
-      'X-Auth-Token' : token
-    }
-  );
-  Map<String, dynamic> x = jsonDecode(r.body);
-  List y = x['scorers'];
-  List<topScorer> topScorersList = [];
-  for(var i in y){
-    topScorersList.add(new topScorer(i['player']['name'], i['team']['name'], i['numberOfGoals'].toString()));
-  }
-
-  return topScorersList;
-}
+import 'package:livescroe/Services/api.dart';
 
 class topScorers extends StatefulWidget{
   String leagueCode;
@@ -49,7 +20,7 @@ class topScorersState extends State<topScorers>{
     return Container(
       color: leagueColor,
       child: FutureBuilder(
-        future: getScorers(leagueCode),
+        future: SoccerApi().getScorers(leagueCode),
         builder: (context, snapshot){
           if(snapshot.data == null)
             return Center(child: CircularProgressIndicator());
@@ -107,6 +78,5 @@ Widget rankingRow([String pos = '', String name = 'Player', String team = 'Team'
 
 final plStyle = TextStyle(
     color: Colors.white,
-    fontSize: 20,
-    fontWeight: FontWeight.w600
+    fontSize: 14,
 );

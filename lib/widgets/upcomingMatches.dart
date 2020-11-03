@@ -1,19 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:http/http.dart';
+import 'package:livescroe/Services/api.dart';
 import 'dart:async';
 import 'dart:convert';
 
-final String token = 'c2928278d71247c3bcb7c4ccc89cc2c6';
-
-class match {
-  String homeTeam;
-  String awayTeam;
-  String matchDay;
-  String matchTime;
-
-  match(this.homeTeam, this.awayTeam, this.matchDay, this.matchTime);
-}
+import 'package:livescroe/models/match.dart';
 
 class upcomingMatches extends StatefulWidget {
   String leagueCode;
@@ -34,7 +26,7 @@ class upcomingMatchesState extends State<upcomingMatches> {
     return Container(
         color: leagueColor,
         child: FutureBuilder(
-          future: getMatches(leagueCode),
+          future: SoccerApi().getMatches(leagueCode),
           builder: (context, snapshot) {
             if (snapshot.data == null) {
               return Center(
@@ -108,34 +100,10 @@ class upcomingMatchesState extends State<upcomingMatches> {
   }
 }
 
-Future<List<match>> getMatches(String code) async {
-  Response r = await get(
-      Uri.encodeFull(
-          'https://api.football-data.org/v2/competitions/$code/matches?status=SCHEDULED'),
-      headers: {"X-Auth-Token": token});
 
-  Map<String, dynamic> x = jsonDecode(r.body);
-  List y = x['matches'];
-
-  List<match> extractedMatches = [];
-
-  print(x.keys);
-  for (var i in y) {
-    extractedMatches.add(new match(
-        i['homeTeam']['name'],
-        i['awayTeam']['name'],
-        i['utcDate'].toString().substring(5, 10),
-        DateTime.parse(i['utcDate'])
-            .toLocal()
-            .toIso8601String()
-            .substring(11, 16)));
-  }
-
-  return extractedMatches;
-}
 
 TextStyle teamStyle =
-    TextStyle(color: Colors.black, fontSize: 20, fontStyle: FontStyle.italic);
+    TextStyle(color: Colors.black, fontSize: 14);
 
 timeFormatter(match m) {
   String convertedTime = m.matchTime;

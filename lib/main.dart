@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'file:///C:/Users/dell/Desktop/livescore-main/lib/view/pagebody.dart';
+import 'package:livescroe/Screens/pagebody.dart';
 
 
 void main() {
   runApp(MyApp());
-
 }
 
 class MyApp extends StatelessWidget {
@@ -27,18 +26,20 @@ class _SoccerAppState extends State<SoccerApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFFAFAFA),
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Color(0xFFFAFAFA),
+        backgroundColor: Colors.grey,
         elevation: 0.0,
         title: Text(
           "SOCCERBOARD",
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(color: Colors.white),
         ),
         centerTitle: true,
       ),
      
-      body:PageBody (context)
+      body:PageBody (context),
+
+
     );
   }
 }
